@@ -12,15 +12,12 @@ var uploadEncryption = {
 		var _min_qjuery = (typeof jQuery == 'undefined') ?  false :  true;
 		var _min_openpgp = (typeof openpgp == 'undefined') ?  false :  true;
 	
-		if  ( _min_html5 && _min_qjuery && _min_openpgp )
-		{
-			return true;
-		}
-		else
-		{
-			alert('This library require html5, jquery, openpgp.');
-			return false;
-		}
+		var _minimal_req = ( _min_html5 && _min_qjuery && _min_openpgp ) ? true : false;
+		
+		if (! _minimal_req) alert('This library require html5, jquery, openpgp.');
+		
+        return _minimal_req;
+		
 	},
 	
 	
