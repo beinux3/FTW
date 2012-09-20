@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>javascript file uploader + asimmetric encription</title>
+    <script src="js/openpgp/openpgp.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/jquery-1.8.1.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<h1>javascript file uploader + asimmetric encription</h1>
+
+<pre id="pubkey" style="display:none">
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v2.0.17 (MingW32)
+
+mQENBE9QrOYBCADpcwAfXZ2/M8Rco33LU5/y5A3WsSsrjUsh+J1sAqRq4J74Mhl8
+Ih+dfDl+PuvTfocac89f+zrP3zCI+wTUof7ZN6tMhE/Q0+5wbXtIVLbuKyTeulsh
+5ZdR5WJQf0kJqY1JDupVj+Ap99+q1NV0agM9cg4xTa4voQWb4u8XNSRRFj9AcXRn
+ABptN7zB+LywQzV6xgw5xn5pT7dvE7Ur+iDHc3RSvWTf8YxCNa5tTtvJLpXNtZ+K
+keH+2K2BdengrmwZ+OOwgjtJJaz8Q8uCdJQli3G0Oqh9OnD57OS2R8OQei6FsyBO
+/GUH0KBz9w9Eqd04N0t44vVztNx8gQSXb13hABEBAAG0I0x1Y2EgTmFwb2xpdGFu
+byA8YmVpbnV4M0BnbWFpbC5jb20+iQE+BBMBAgAoBQJPUKzmAhsDBQkBvFLaBgsJ
+CAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAv9QxqiODQonGLB/90m+ahVIl7ATFb
+kYeRvz82iX5R6+6Wr2Hb4rOg8XHgAkqacBN0uHe9jnFL/UV9945Z9Ge5FG3fDRNH
+sO6RGJvd0v4P3p/86V9o3OLAZHuj2e8cDr9VansdxrPZX51OoYv6Rq9mtRe9juuN
+omQLtvG/4gOK1QKhHuucvF8WBAcgEJRwxUU5D1nAEZkwmEzSBooEe9RW3er8syY6
+nt5+g6rxTdAPY3ID9IvUiTxiPjtXNXOiHiJ3zNHW6zBfWBttbqQq/ORsYmND8RTq
+HhmfwA5R2BTCwppof7jRE5MK3wnVowj0Qk3VTIGe0UojOKfATMrdEyZWM+Dbtvpt
+cj+RNWssiGsEEBECACsFAk9QrPMFgwHihQAeGmh0dHA6Ly93d3cuY2FjZXJ0Lm9y
+Zy9jcHMucGhwAAoJENK7DQFl0P1YBdsAnjtXa3Y8PphoL6ADRaqG7jJmMQDqAJ0Y
+5kpvLdfkHtlBZx/9WVd5SD2g6LkBDQRPUKzmAQgAtfECgfgkPG0x00BVVlKQQ2Q6
++q8IWCmoNTrPPM9oJ+Jcn9pIhHZUeAap8yA32RyBSUXUTDiUt8mqEfkC2rAadZ2v
+ym6kgZKjTw3tjF6n8t0UILQpYDXiCKp6TxykgcJRwHUmCOCyPVB8lREInimSXknc
+gAqBay1TANsbOLpYSc1TeGddExGZApbhWBD8Dlcn9kD3yAnDb2wEbyFL712I8fQZ
+eJ3a/eWCzN4NpgMS5YToS/EBd8JyIepKw4pShTKipNhFb3av0Ly1VbKV3De/Br65
+4LrTFbTTvWyCk6EkwbR4592An5c9hTDcAYA/n59FU8YUheNo2CwB5ZFjv0XKOwAR
+AQABiQElBBgBAgAPBQJPUKzmAhsMBQkBvFLaAAoJEC/1DGqI4NCi47wH+wQce6XW
+5TiwvXKdS6usCBMzqb9eDs7rSbbABZiKzaj0LWFBCWoIZl7glG4XYoWezv3BtZCc
+4FJ5CQWmSHIwSxyu4Nqq8tEpDJjwPDzIrrwkGus4sYn2Ih97vbfLD1s1UW1gZBna
++nQUA9TA+W3dRZQVu5uBi5DKXjepbBBAL4O0Fd290aNJUm97mnBi1UexsKCwCnQ7
+5lGrOwb18OHSetFOcpNCoxj/bgVHagDIboDGo35eHcSb4ux2tcj6mgeztGrr4phl
+KhJCcjhXKmVEBfeq8mb6pny/Unc/G71/XmlWLnsKxph2KvPY0n8SP7UAv0qCXZm1
+BCGfH/Vui3Kz98M=
+=nyet
+-----END PGP PUBLIC KEY BLOCK-----
+</pre>
+    <script src="js/uploadEncryption.js" type="text/javascript" charset="utf-8"></script>
+
+    <script>
+        uploadEncryption.baseRequire();
+        uploadEncryption.init( $('#pubkey').text() );
+        alert( uploadEncryption.getPubKey() );
+    </script>
+
+</body> 
+</html>
