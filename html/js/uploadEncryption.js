@@ -5,33 +5,12 @@ var uploadEncryption = {
 	_post_url : 'upload.pgp',
 	
 	_internal_id_file_input : 'form_file_upload',
-	_internal_value_file_input : 'Selezioun file',
-
-    _ckhtml5: function () {
-	
-		// Check for the various File API support.
-		return (window.File && window.FileReader && window.FileList && window.Blob) ?  true :  false;
-        
-
-    },
-	
-	_ckqjuery: function () {
-	
-	    return (typeof jQuery == 'undefined') ?  false :  true;
-
-	},
-
-	_ckopenpgp: function () {
-	
-	    return (typeof openpgp == 'undefined') ?  false :  true;
-
-	},
 	
 	baseRequire: function () {
 	
-		var _min_html5 = this._ckhtml5();
-		var _min_qjuery = this._ckqjuery();
-		var _min_openpgp = this._ckopenpgp();
+		var _min_html5 = (window.File && window.FileReader && window.FileList && window.Blob) ?  true :  false;
+		var _min_qjuery = (typeof jQuery == 'undefined') ?  false :  true;
+		var _min_openpgp = (typeof openpgp == 'undefined') ?  false :  true;
 	
 		if  ( _min_html5 && _min_qjuery && _min_openpgp )
 		{
@@ -39,7 +18,7 @@ var uploadEncryption = {
 		}
 		else
 		{
-			alert('Sono richieste le seguenti risorse supporto html5, jquery, openpgp.');
+			alert('This library require html5, jquery, openpgp.');
 			return false;
 		}
 	},
@@ -61,7 +40,7 @@ var uploadEncryption = {
 		$("#main_container").html('<div id="header_container" ></div>');
 		$("#main_container").html('<div id="body_container" ></div>');
 		
-		$("#body_container").html('<input type="file" id="' + this._internal_id_file_input + '" value="' + this._internal_value_file_input + '" />');
+		$("#body_container").html('<input type="file" id="' + this._internal_id_file_input + '" />');
     },
 	
 	read_value: function(ids) {
