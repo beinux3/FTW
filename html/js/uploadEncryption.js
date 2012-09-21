@@ -43,20 +43,24 @@ var uploadEncryption = {
 	_handleFileSelect: function (evt) {
 		evt.stopPropagation();
 		evt.preventDefault();
+		
+		up_cfg_delta = window.localStorage.getItem("up_cfg_delta");
+		var delta = $.evalJSON(up_cfg_delta).delta_defrag;
+		
 		var files = evt.dataTransfer.files; 
 		var output = [];
 		for (var i = 0, f; f = files[i]; i++) {	
-			delta = window.localStorage.getItem("up_cfg_delta");
 			
 			part = parseInt(f.size / delta) ;
 			part_r = parseInt(f.size % delta);
 			if ( part_r > 0 ) { part = part + 1; }
 			
+			window.list_file_upload.push ( f );
+			
 			output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
 					  f.size, ' bytes, last modified: ',
 					  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-					  '|| Fragmentation ', part, ' file part to upload. ',
-					  '</li>');
+					  '|| Fragmentation ', part, ' file part to upload. ', '</li>');
 		}
 		$("#header_fileinfo").html('<ul>' + output.join('') + '</ul>');
 	},
@@ -80,11 +84,13 @@ var uploadEncryption = {
 	},
 	
 	librarySetConfig: function () {
-		localStorage.setItem("up_cfg_delta", this._fragmentation_delta);
+		var cfg = {delta_defrag: this._fragmentation_delta, number_defrag: this._fragmentation_number, defrag_type: this._fragmentation_type };
+		var encoded = $.toJSON( cfg );
+		localStorage.setItem("up_cfg_delta", encoded);
 	},
 	
 	libraryGetConfig: function () {
-		internal = localStorage.getItem("upload_config");
+		internal = localStorage.getItem("up_cfg_delta");
 		alert(internal);
 	},
 	
@@ -124,3 +130,5 @@ var uploadEncryption = {
 	},
 			
 };	
+
+var list_file_upload = new Array();
