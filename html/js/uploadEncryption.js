@@ -43,7 +43,9 @@ var uploadEncryption = {
 	_handleFileSelect: function (evt) {
 		evt.stopPropagation();
 		evt.preventDefault();
-		
+
+		window.list_file_upload = [];
+
 		up_cfg_delta = window.localStorage.getItem("up_cfg_delta");
 		var delta = $.evalJSON(up_cfg_delta).delta_defrag;
 		
@@ -56,11 +58,13 @@ var uploadEncryption = {
 			if ( part_r > 0 ) { part = part + 1; }
 			
 			window.list_file_upload.push ( f );
-			
+
+			p = '<a href=# onclick="uploadEncryption.upload(' + i + ');">upload</a>';
+
 			output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
 					  f.size, ' bytes, last modified: ',
 					  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-					  '|| Fragmentation ', part, ' file part to upload. ', '</li>');
+					  '|| Fragmentation ', part, ' file part to upload. ', p, '</li>');
 		}
 		$("#header_fileinfo").html('<ul>' + output.join('') + '</ul>');
 	},
@@ -124,6 +128,31 @@ var uploadEncryption = {
 	read_value: function(ids) {
 		return ids;
 	},
+	
+	upload: function(ids) {
+
+        this._readerPart(list_file_upload[ids], 0, 1000 );
+
+	},
+
+    _readerPart: function(ufile, opt_startByte, opt_stopByte){
+
+        var start = parseInt(opt_startByte) || 0;
+        var stop = parseInt(opt_stopByte) || ufile.size - 1;
+        var llll = 'gooo';
+        var reader = new FileReader();
+
+        // If we use onloadend, we need to check the readyState.
+        reader.onloadend = function(evt) {
+          if (evt.target.readyState == FileReader.DONE) { // DONE == 2
+            alert( evt.target.result );
+          }
+        };
+
+        var blob = ufile.slice(start, stop + 1);
+        reader.readAsBinaryString(blob);   
+    },
+
 	
 	getPubKey: function() {
 		return this._pub_key;
