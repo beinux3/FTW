@@ -130,22 +130,24 @@ var uploadEncryption = {
 	},
 	
 	upload: function(ids) {
+        file = list_file_upload[ids];
 
-        this._readerPart(list_file_upload[ids], 0, 1000 );
+        this._readerPart(file, 1);
 
 	},
 
-    _readerPart: function(ufile, opt_startByte, opt_stopByte){
-
-        var start = parseInt(opt_startByte) || 0;
-        var stop = parseInt(opt_stopByte) || ufile.size - 1;
-        var llll = 'gooo';
+    _readerPart: function(ufile, part){
+        // parseInt(opt_startByte) 
+        var start =  0;
+        var stop = 1000;
         var reader = new FileReader();
-
+        var filename = ufile.name;
         // If we use onloadend, we need to check the readyState.
         reader.onloadend = function(evt) {
           if (evt.target.readyState == FileReader.DONE) { // DONE == 2
-            alert( evt.target.result );
+            message = window.openpgp.write_encrypted_message( window.uploadEncryption.getPubKey() ,evt.target.result  )
+            data = {"message":window.btoa(message),"name":window.btoa(filename),"part":part};
+            window.$.post("upload.pgp", data, window.uploadEncryption.callback(data));
           }
         };
 
@@ -153,6 +155,10 @@ var uploadEncryption = {
         reader.readAsBinaryString(blob);   
     },
 
+	callback: function(ff) {
+        alert(ff);
+		return true;
+	},
 	
 	getPubKey: function() {
 		return this._pub_key;

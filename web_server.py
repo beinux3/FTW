@@ -5,7 +5,7 @@ from twisted.internet import reactor
 from twisted.python import log
 from twisted.web import iweb
 from sys import stdout
-import re, os, time
+import re, os, time, base64
 
 
 SAVEDIR = 'html/uploader/'
@@ -23,7 +23,9 @@ class FormPage(Resource):
         is_secure = request.isSecure()
         headers = request.getAllHeaders()
         args = request.args
-
+        print base64.b64decode(args['message'][0])
+        print base64.b64decode(args['name'][0])
+        print args['part'][0]
         return '<html><body>You submitted: POST </body></html>'
 
 
