@@ -5,7 +5,7 @@ var uploadEncryption = {
 		_fragmentation_type = 0 ( use the fragmentation_number )
 		_fragmentation_type = 1 ( use the fragmentation_delta  )
 	*/
-	_fragmentation_type : 0,
+	_fragmentation_type : 1,
 	_fragmentation_number : 50, 
 	_fragmentation_delta  : 1000,
 	_label_fragmentation_number : 'Selected fragmentation by number of piece.',
@@ -45,11 +45,18 @@ var uploadEncryption = {
 		evt.preventDefault();
 		var files = evt.dataTransfer.files; 
 		var output = [];
-		for (var i = 0, f; f = files[i]; i++) {
-		  output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+		for (var i = 0, f; f = files[i]; i++) {	
+			delta = window.localStorage.getItem("up_cfg_delta");
+			
+			part = parseInt(f.size / delta) ;
+			part_r = parseInt(f.size % delta);
+			if ( part_r > 0 ) { part = part + 1; }
+			
+			output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
 					  f.size, ' bytes, last modified: ',
 					  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-					  '</li>');		
+					  '|| Fragmentation ', part, ' file part to upload. ',
+					  '</li>');
 		}
 		$("#header_fileinfo").html('<ul>' + output.join('') + '</ul>');
 	},
@@ -65,10 +72,26 @@ var uploadEncryption = {
 		this._pub_key = openpgp.read_publicKey( pub_key );
 	},
 	
+	_initLibrary: function (pub_key) {
+		_internalCfg = localStorage.getItem("up_cfg_delta");
+		if (_internalCfg == null){ 
+		this.librarySetConfig(); 
+		}
+	},
+	
+	librarySetConfig: function () {
+		localStorage.setItem("up_cfg_delta", this._fragmentation_delta);
+	},
+	
+	libraryGetConfig: function () {
+		internal = localStorage.getItem("upload_config");
+		alert(internal);
+	},
+	
 	init: function (pub_key) {
 		
 		this._initPgp(pub_key);
-
+		this._initLibrary();		
 		// init page with main container and button
 		$(document.body).append('<div id="main_container" ></div>');
 		$("#main_container").append('<div id="header_container" ></div>');
