@@ -23,10 +23,22 @@ class FormPage(Resource):
         is_secure = request.isSecure()
         headers = request.getAllHeaders()
         args = request.args
-        print base64.b64decode(args['message'][0])
-        print base64.b64decode(args['name'][0])
-        print args['part'][0]
-        return '<html><body>You submitted: POST </body></html>'
+
+        message = base64.b64decode(args['message'][0])
+        name = base64.b64decode(args['name'][0])
+        part = args['part'][0]
+        
+        OUT_FILE_DIR = SAVEDIR + '/' + args['name'][0]
+
+        if not os.path.exists(OUT_FILE_DIR):
+            os.makedirs(OUT_FILE_DIR)
+
+        file_out_name = '%s/%s.%s.pgp' % (OUT_FILE_DIR, part, name )
+        ofile = open(file_out_name, "w")
+        ofile.writelines(message)
+        ofile.close()
+
+        return "{'status':'ok', 'name':'%s','part':'%s' }" % ( args['name'][0], args['part'][0])
 
 
 if not os.path.exists(SAVEDIR):
