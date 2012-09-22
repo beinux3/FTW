@@ -128,29 +128,92 @@ var uploadEncryption = {
 	read_value: function(ids) {
 		return ids;
 	},
-	
-    _writePromiseMemorySend : function(){
-        return true;
+
+    _initFileTransfertState: function(name, size, part){      
+        var arTmap = [];
+        for(i=0; i<part; i++){arTmap.push('0');}
+        arrTmpStr = arTmap.join(',');
+		window.localStorage.setItem(btoa(name), arrTmpStr);
     },
 
-    _writeConfirmMemorySend : function(){
-        return true;
+    _updateFileTransfertState: function(name, part, status){
+        /*
+            File state array indicate the actual state of piece trasfert
+
+            REMEMBER:
+            part variabile indicate the part of file; in position 1 there is a first part of file,
+            in the position 0 there is a last part.
+
+        */
+
+        file_state = window.localStorage.getItem(name);
+        file_state_arr = file_state.split(','); // split array element
+        really_part = (part == 0 ) ? file_state_arr.length : part ;
+
+        state_part = (status == 'ok') ? 1 : 0; // value 0 not transfert correct
+        file_state_arr[really_part-1] = state_part; // update correct transfert
+        arrTmpStr = file_state_arr.join(',');
+
+		window.localStorage.setItem(name, arrTmpStr);
+    },
+	
+    _writePromiseMemorySend : function(_fileName,  _part){
+        var _intPromise = _part + '|' + _fileName;
+		window.localStorage.setItem(_intPromise, '1');
+    },
+
+    _writeConfirmMemorySend : function(_fileName,  _part , _status ){
+        var _intPromise = _part + '|' + _fileName;
+		window.localStorage.removeItem(_intPromise);
+        this._updateFileTransfertState(_fileName, _part , _status);
     },
 
     upload: function(ids) {
-        file = list_file_upload[ids];
-        this._readerPartAndSubmit(file, 1);
+
+        file = window.list_file_upload[ids];
+        totalPart = this._getTotalPartFromSize(file.size);
+        this._initFileTransfertState(file.name, file.size, totalPart);
+
+        for ( i=0; i<totalPart; i++){
+            this._readerPartAndSubmit(file, i);
+        }
+    },
+
+    _getTotalPartFromSize : function (size){
+
+		part = parseInt(size / this._fragmentation_delta );
+		part_r = parseInt(size % this._fragmentation_delta );
+		if ( part_r > 0 ) { part = part + 1; }
+        return part;
+    },
+
+    _getPartInterval: function(size, part){
+        // parseInt(opt_startByte) 
+    fragma = this._fragmentation_delta;
+    totalPart = this._getTotalPartFromSize(size);
+
+    part = ( part >= totalPart ) ? 0 : part ; // check for impossibile value
+
+    interval = [];
+    
+    interval[0] = ( part == 1 ) ? 0 : (part * fragma ) - fragma ;
+    interval[0] = ( part == 0 ) ? ((totalPart-1)* fragma ) : (part * fragma ) - fragma ;
+
+    interval[1] = ( part == 0 ) ? size : part * fragma ; // End interval
+
+    return interval;
     },
 
     _readerPartAndSubmit: function(ufile, part){
 
-        // parseInt(opt_startByte) 
-        var start =  0;
-        var stop = 1000;
+        interval = this._getPartInterval(ufile.size, part);
+
+        var start = interval[0];
+        var stop = interval[1];
 
         var reader = new FileReader();
         var _filename = ufile.name;
-        this._writePromiseMemorySend();
+        this._writePromiseMemorySend( btoa(_filename), part);
 
         // If we use onloadend, we need to check the readyState.
         reader.onloadend = function(evt) {
@@ -171,8 +234,7 @@ var uploadEncryption = {
 		var _part = bk_data.part;
 		var _fileName = bk_data.name;
 
-        alert(_status + ' ' + _part + ' ' + _fileName);
-        //this._writeConfirmMemorySend(_fileName,  _part , _status );
+        this._writeConfirmMemorySend(_fileName,  _part , _status );
 		return true;
 	},
 	
