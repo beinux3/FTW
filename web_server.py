@@ -5,6 +5,7 @@ from twisted.internet import reactor
 from twisted.python import log
 from twisted.web import iweb
 from sys import stdout
+import json
 import re, os, time, base64
 
 
@@ -15,7 +16,7 @@ log.startLogging(stdout)
 class FormPage(Resource):
 
     def render_GET(self, request):
-        return '<html><body>You submitted: GET </body></html>'
+        return "{'status':'ok'}"
 
     def render_POST(self, request):
 
@@ -38,7 +39,11 @@ class FormPage(Resource):
         ofile.writelines(message)
         ofile.close()
 
-        return "{'status':'ok', 'name':'%s','part':'%s' }" % ( args['name'][0], args['part'][0])
+        responseCollector = {'status':'ok', 'name': args['name'][0] ,'part': args['part'][0] }
+
+        request.setHeader("content-type", "application/json")
+        return json.dumps(responseCollector)
+        #return "{status:'ok', name:'%s',part:'%s' }" % ( args['name'][0], args['part'][0])
 
 
 if not os.path.exists(SAVEDIR):

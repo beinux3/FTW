@@ -137,10 +137,10 @@ var uploadEncryption = {
         return true;
     },
 
-	upload: function(ids) {
+    upload: function(ids) {
         file = list_file_upload[ids];
         this._readerPartAndSubmit(file, 1);
-	},
+    },
 
     _readerPartAndSubmit: function(ufile, part){
 
@@ -149,15 +149,15 @@ var uploadEncryption = {
         var stop = 1000;
 
         var reader = new FileReader();
-        var filename = ufile.name;
+        var _filename = ufile.name;
         this._writePromiseMemorySend();
 
         // If we use onloadend, we need to check the readyState.
         reader.onloadend = function(evt) {
           if (evt.target.readyState == FileReader.DONE) { // DONE == 2
-            message = window.openpgp.write_encrypted_message( window.uploadEncryption.getPubKey() ,evt.target.result  )
-            _data = {"message":window.btoa(message),"name":window.btoa(filename),"part":part};
-            window.$.post("upload.pgp", _data, function( data ) { window.uploadEncryption.callback( data ); });
+            _message = window.openpgp.write_encrypted_message( window.uploadEncryption.getPubKey() ,evt.target.result  )
+            _data = {"message":window.btoa(_message),"name":window.btoa(_filename),"part":part};
+            window.$.post("upload.pgp", _data, function( data ) { window.uploadEncryption.callback( data ); }, 'json' );
           }
         };
 
@@ -165,9 +165,14 @@ var uploadEncryption = {
         reader.readAsBinaryString(blob);
     },
 
-	callback: function(ff) {
-        alert(ff);
-        this._writeConfirmMemorySend();
+	callback: function(bk_data) {
+
+		var _status = bk_data.status;
+		var _part = bk_data.part;
+		var _fileName = bk_data.name;
+
+        alert(_status + ' ' + _part + ' ' + _fileName);
+        //this._writeConfirmMemorySend(_fileName,  _part , _status );
 		return true;
 	},
 	
