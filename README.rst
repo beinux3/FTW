@@ -23,7 +23,7 @@ Features
 Installation
 ************
 
-FTW can be installed using either ``pip`` or ``easy_install``. 
+FTW can be installed using either ``pip`` or ``easy_install``. ::
 
 $ virtualenv FTW-env --no-site-packages -p python2.7 
 $ cd FTW-env 
