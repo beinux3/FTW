@@ -38,6 +38,6 @@ Running
 *******
 To try out FTW, just run: ::
 
-$ python apaf/main.py
+$ python web_server.py
 
 
