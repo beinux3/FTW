@@ -33,7 +33,6 @@ $ cd FTW
 $ pip install -r requirements.txt 
 
 
-
 Running
 *******
 To try out FTW, just run: ::
