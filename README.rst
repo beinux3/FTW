@@ -8,6 +8,9 @@ About FTW
 This project now is incomplete. I work for create and indipendent modules.
 In this test version upload only small file, because i don't optimize the upload function.
 
+NOTE:
+In this particolar version use only chrome.
+
 
 Metadata
 ********
