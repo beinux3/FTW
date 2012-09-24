@@ -31,7 +31,7 @@ FTW can be installed using either ``pip`` or ``easy_install``. ::
 $ virtualenv FTW-env --no-site-packages -p python2.7 
 $ cd FTW-env 
 $ source bin/activate 
-$ pip install git+https://github.com/beinux3/FTW.git
+$ git clone https://github.com/beinux3/FTW.git
 $ cd FTW 
 $ pip install -r requirements.txt 
 
